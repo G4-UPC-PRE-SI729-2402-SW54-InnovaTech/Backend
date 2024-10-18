@@ -1,15 +1,20 @@
 package pe.upc.connexbackend.users.domain.model.commands;
 
-public record UpdateUserCommand(
-        Integer id,
-        String name,
-        String email,
-        String password,
-        String role
-) {
+import pe.upc.connexbackend.users.domain.model.valueobjects.UserType;
+
+public record UpdateUserCommand(Integer id, String email, String passwordHash, UserType userType) {
     public UpdateUserCommand {
-        if (id == null || name == null || email == null || password == null || role == null) {
-            throw new IllegalArgumentException("All fields are required");
+        if (id == null) {
+            throw new IllegalArgumentException("id is required");
+        }
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("email is required");
+        }
+        if (passwordHash == null || passwordHash.isBlank()) {
+            throw new IllegalArgumentException("passwordHash is required");
+        }
+        if (userType == null) {
+            throw new IllegalArgumentException("userType is required");
         }
     }
 }

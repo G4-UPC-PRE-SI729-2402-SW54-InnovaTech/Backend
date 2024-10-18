@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Table(name = "company")
 @Getter
 @Setter
 public class Company {
@@ -13,8 +14,8 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer companyId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
     @Column(nullable = false, length = 100)

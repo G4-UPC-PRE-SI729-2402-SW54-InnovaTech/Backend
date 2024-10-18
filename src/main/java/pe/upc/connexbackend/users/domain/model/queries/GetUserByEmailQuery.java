@@ -1,11 +1,11 @@
 package pe.upc.connexbackend.users.domain.model.queries;
 
-public record GetUserByEmailQuery(
-        String email
-) {
+import pe.upc.connexbackend.users.domain.model.valueobjects.EmailAddress;
+
+public record GetUserByEmailQuery(EmailAddress emailAddress) {
     public GetUserByEmailQuery {
-        if (email == null) {
-            throw new IllegalArgumentException("email is required");
+        if (emailAddress == null) {
+            throw new IllegalArgumentException("emailAddress is required");
         }
     }
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Table(name = "influencer")
 @Getter
 @Setter
 public class Influencer {
@@ -13,8 +14,8 @@ public class Influencer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer influencerId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, unique = true)
     private User user;
 
     @Column(nullable = false, length = 50)

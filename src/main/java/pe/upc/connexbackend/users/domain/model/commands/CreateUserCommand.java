@@ -1,19 +1,17 @@
 package pe.upc.connexbackend.users.domain.model.commands;
 
-public record CreateUserCommand(
-    String name,
-    String email,
-    String password
-) {
+import pe.upc.connexbackend.users.domain.model.valueobjects.UserType;
+
+public record CreateUserCommand(String email, String passwordHash, UserType userType){
     public CreateUserCommand {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Name cannot be null or empty");
-        }
         if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("Email cannot be null or empty");
+            throw new IllegalArgumentException("email is required");
         }
-        if (password == null || password.isBlank()) {
-            throw new IllegalArgumentException("Password cannot be null or empty");
+        if (passwordHash == null || passwordHash.isBlank()) {
+            throw new IllegalArgumentException("passwordHash is required");
+        }
+        if (userType == null) {
+            throw new IllegalArgumentException("userType is required");
         }
     }
 }

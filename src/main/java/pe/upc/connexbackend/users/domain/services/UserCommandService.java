@@ -7,6 +7,6 @@ import pe.upc.connexbackend.users.domain.model.commands.UpdateUserCommand;
 
 public interface UserCommandService {
     User handle(CreateUserCommand command);
-    User handle(DeleteUserCommand command);
+    void handle(DeleteUserCommand command);
     User handle(UpdateUserCommand command);
 }
