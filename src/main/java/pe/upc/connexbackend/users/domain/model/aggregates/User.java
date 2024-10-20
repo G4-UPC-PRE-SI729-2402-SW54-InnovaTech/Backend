@@ -26,7 +26,10 @@ public class User extends AuditableAbstractAggregateRoot<User> {
     @Column(nullable = false)
     private Boolean isActive = true;
 
-    public User(String email, String passwordHash, UserType userType) {
+    public User(
+            String email,
+            String passwordHash,
+            UserType userType) {
         this.email = new EmailAddress(email);
         this.passwordHash = passwordHash;
         this.userType = userType;
