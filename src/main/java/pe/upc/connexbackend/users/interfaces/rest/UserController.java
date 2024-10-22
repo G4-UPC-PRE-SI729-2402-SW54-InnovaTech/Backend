@@ -1,48 +1,53 @@
 package pe.upc.connexbackend.users.interfaces.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pe.upc.connexbackend.users.application.UserCommandServiceImpl;
-import pe.upc.connexbackend.users.application.UserQueryServiceImpl;
 import pe.upc.connexbackend.users.domain.model.aggregates.User;
-import pe.upc.connexbackend.users.domain.model.commands.CreateUserCommand;
-import pe.upc.connexbackend.users.domain.model.commands.DeleteUserCommand;
 import pe.upc.connexbackend.users.domain.model.commands.UpdateUserCommand;
 import pe.upc.connexbackend.users.domain.model.queries.GetAllUsersQuery;
 import pe.upc.connexbackend.users.domain.model.queries.GetUserByEmailQuery;
 import pe.upc.connexbackend.users.domain.model.queries.GetUserByIdQuery;
 import pe.upc.connexbackend.users.domain.model.valueobjects.EmailAddress;
+import pe.upc.connexbackend.users.domain.services.UserCommandService;
+import pe.upc.connexbackend.users.domain.services.UserQueryService;
+import pe.upc.connexbackend.users.interfaces.rest.requests.UpdateUserRequest;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/users")
+@Tag(name = "Users", description = "User Management Endpoints")
 public class UserController {
 
-    @Autowired
-    private UserCommandServiceImpl userCommandService;
 
-    @Autowired
-    private UserQueryServiceImpl userQueryService;
+    private final UserCommandService userCommandService;
+    private final UserQueryService userQueryService;
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody CreateUserCommand command) {
-        User user = userCommandService.handle(command);
-        return ResponseEntity.ok(user);
+    public UserController(UserCommandService userCommandService, UserQueryService userQueryService) {
+        this.userCommandService = userCommandService;
+        this.userQueryService = userQueryService;
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
-        userCommandService.handle(new DeleteUserCommand(id));
-        return ResponseEntity.noContent().build();
-    }
+
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody UpdateUserCommand command) {
-        User user = userCommandService.handle(new UpdateUserCommand(id, command.email(), command.passwordHash(), command.userType()));
-        return ResponseEntity.ok(user);
+    public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody UpdateUserRequest request) {
+        Optional<User> existingUser = userQueryService.handle(new GetUserByIdQuery(id));
+        if (existingUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = existingUser.get();
+        UpdateUserCommand command = new UpdateUserCommand(id, request.getEmail(), request.getPasswordHash(), user.getUserTypeEnum());
+        Optional<User> updatedUser = userCommandService.handle(command);
+
+        if (updatedUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(updatedUser.get());
     }
 
     @GetMapping("/{id}")

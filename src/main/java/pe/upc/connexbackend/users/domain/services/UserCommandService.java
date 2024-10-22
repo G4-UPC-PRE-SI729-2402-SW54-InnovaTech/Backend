@@ -1,12 +1,9 @@
 package pe.upc.connexbackend.users.domain.services;
 
-import pe.upc.connexbackend.users.domain.model.commands.CreateUserCommand;
 import pe.upc.connexbackend.users.domain.model.aggregates.User;
-import pe.upc.connexbackend.users.domain.model.commands.DeleteUserCommand;
 import pe.upc.connexbackend.users.domain.model.commands.UpdateUserCommand;
+import java.util.Optional;
 
 public interface UserCommandService {
-    User handle(CreateUserCommand command);
-    void handle(DeleteUserCommand command);
-    User handle(UpdateUserCommand command);
+    Optional<User> handle(UpdateUserCommand command);
 }

@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/influencers")
-@Tag(name = "influencers", description = "Influencer Management Endpoints")
+@Tag(name = "Influencers", description = "Influencer Management Endpoints")
 public class InfluencerController {
 
     private final InfluencerCommandService influencerCommandService;
@@ -51,8 +51,8 @@ public class InfluencerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Influencer> updateInfluencer( @RequestBody UpdateInfluencerCommand command) {
-        Optional<Influencer> influencer = influencerCommandService.handle(new UpdateInfluencerCommand(command.influencerId(), command.firstName(), command.lastName(), command.phoneNumber(), command.socialMediaHandle()));
+    public ResponseEntity<Influencer> updateInfluencer(@PathVariable Integer id, @RequestBody UpdateInfluencerCommand command) {
+        Optional<Influencer> influencer = influencerCommandService.handle(new UpdateInfluencerCommand(id, command.firstName(), command.lastName(), command.phoneNumber(), command.socialMediaHandle()));
         if (influencer.isEmpty()) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(influencer.get());
     }

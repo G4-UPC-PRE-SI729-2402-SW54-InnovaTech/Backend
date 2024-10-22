@@ -42,4 +42,6 @@ public class User extends AuditableAbstractAggregateRoot<User> {
 
     public String getUserType() { return userType.toString(); }
 
+    public UserType getUserTypeEnum() { return userType; }
+
 }
