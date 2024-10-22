@@ -6,10 +6,9 @@ import pe.upc.connexbackend.users.interfaces.rest.resources.InfluencerResource;
 public class InfluencerResourceFromEntityAssembler {
     public static InfluencerResource toResourceFromEntity(Influencer entity) {
         return new InfluencerResource(
-                entity.getInfluencerId(),
+                entity.getId(),
                 entity.getUser().getEmailAddress(),
                 entity.getUser().getPasswordHash(),
-                entity.getUser().getIsActive().toString(),
                 entity.getFirstName(),
                 entity.getLastName(),
                 entity.getPhoneNumber(),

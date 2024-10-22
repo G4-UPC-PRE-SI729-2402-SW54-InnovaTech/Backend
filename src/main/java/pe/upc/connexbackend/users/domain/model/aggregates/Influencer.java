@@ -3,16 +3,13 @@ package pe.upc.connexbackend.users.domain.model.aggregates;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import pe.upc.connexbackend.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 
 @Entity
 @Table(name = "influencer")
 @Getter
 @Setter
-public class Influencer {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer influencerId;
+public class Influencer extends AuditableAbstractAggregateRoot<Influencer> {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, unique = true)
