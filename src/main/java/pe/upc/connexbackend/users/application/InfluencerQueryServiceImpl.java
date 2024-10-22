@@ -1,6 +1,5 @@
 package pe.upc.connexbackend.users.application;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pe.upc.connexbackend.users.domain.model.aggregates.Influencer;
 import pe.upc.connexbackend.users.domain.model.queries.GetAllInfluencersQuery;
@@ -14,7 +13,7 @@ import java.util.Optional;
 @Service
 public class InfluencerQueryServiceImpl implements InfluencerQueryService {
 
-    private InfluencerRepository influencerRepository;
+    private final InfluencerRepository influencerRepository;
 
     public InfluencerQueryServiceImpl(InfluencerRepository influencerRepository) {
         this.influencerRepository = influencerRepository;

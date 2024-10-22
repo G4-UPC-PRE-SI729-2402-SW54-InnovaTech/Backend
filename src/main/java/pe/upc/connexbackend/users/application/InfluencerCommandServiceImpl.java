@@ -27,6 +27,7 @@ public class InfluencerCommandServiceImpl implements InfluencerCommandService {
     }
 
     @Override
+    @Transactional
     public Optional<Influencer> handle(CreateInfluencerCommand command) {
         var emailAddress = new EmailAddress(command.email());
         userRepository.findByEmail(emailAddress).map(user -> {

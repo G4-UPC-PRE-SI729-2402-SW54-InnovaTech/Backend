@@ -1,26 +1,25 @@
 package pe.upc.connexbackend.users.domain.model.commands;
 
-
-public record CreateInfluencerCommand(
-        String firstName,
-        String lastName,
+public record CreateCompanyCommand (
+        String name,
+        String industry,
         String phoneNumber,
-        String socialMediaHandle,
+        String website,
         String email,
         String passwordHash
-) {
-    public CreateInfluencerCommand {
-        if (firstName == null || firstName.isBlank()) {
-            throw new IllegalArgumentException("First name is required");
+){
+    public CreateCompanyCommand {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name is required");
         }
-        if (lastName == null || lastName.isBlank()) {
-            throw new IllegalArgumentException("Last name is required");
+        if (industry == null || industry.isBlank()) {
+            throw new IllegalArgumentException("Industry is required");
         }
         if (phoneNumber == null || phoneNumber.isBlank()) {
             throw new IllegalArgumentException("Phone number is required");
         }
-        if (socialMediaHandle == null || socialMediaHandle.isBlank()) {
-            throw new IllegalArgumentException("Social media handle is required");
+        if (website == null || website.isBlank()) {
+            throw new IllegalArgumentException("Website is required");
         }
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("Email is required");
