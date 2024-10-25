@@ -15,17 +15,26 @@ import pe.upc.connexbackend.users.infraestructure.persistance.jpa.repositories.U
 
 import java.util.Optional;
 
+/**
+ * Servicio para manejar los comandos relacionados con influencers.
+ */
 @Service
 public class InfluencerCommandServiceImpl implements InfluencerCommandService {
 
     private final InfluencerRepository influencerRepository;
     private final UserRepository userRepository;
 
+    /**
+     * Constructor que inyecta los repositorios de influencers y usuarios.
+     */
     public InfluencerCommandServiceImpl(InfluencerRepository influencerRepository, UserRepository userRepository) {
         this.influencerRepository = influencerRepository;
         this.userRepository = userRepository;
     }
 
+    /**
+     * Maneja el comando para crear un nuevo influencer.
+     */
     @Override
     @Transactional
     public Optional<Influencer> handle(CreateInfluencerCommand command) {
@@ -47,12 +56,18 @@ public class InfluencerCommandServiceImpl implements InfluencerCommandService {
         return Optional.of(createdInfluencer);
     }
 
+    /**
+     * Maneja el comando para eliminar un influencer.
+     */
     @Override
     @Transactional
     public void handle(DeleteInfluencerCommand command) {
         influencerRepository.deleteById(command.influencerId());
     }
 
+    /**
+     * Maneja el comando para actualizar un influencer existente.
+     */
     @Override
     @Transactional
     public Optional<Influencer> handle(UpdateInfluencerCommand command) {
