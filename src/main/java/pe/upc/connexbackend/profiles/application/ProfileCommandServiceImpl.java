@@ -46,7 +46,7 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
     @Override
     @Transactional
     public Optional<Profile> handle(UpdateProfileCommand command) {
-        var profile = profileRepository.findById(command.profileId())
+        var profile = profileRepository.findByUserId(command.userId())
                 .orElseThrow(() -> new IllegalArgumentException("Profile not found"));
 
         var location = new Location(command.city(), command.country());
@@ -62,6 +62,6 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
     @Override
     @Transactional
     public void handle(DeleteProfileCommand command) {
-        profileRepository.deleteById(command.profileId());
+        profileRepository.deleteByUserId(command.userId());
     }
 }
