@@ -15,6 +15,7 @@ import pe.upc.connexbackend.profiles.domain.services.ProfileCommandService;
 import pe.upc.connexbackend.profiles.domain.services.ProfileQueryService;
 import pe.upc.connexbackend.profiles.interfaces.rest.resources.CreateProfileResource;
 import pe.upc.connexbackend.profiles.interfaces.rest.resources.ProfileResource;
+import pe.upc.connexbackend.profiles.interfaces.rest.resources.UpdateProfileResource;
 import pe.upc.connexbackend.profiles.interfaces.rest.transform.CreateProfileCommandFromResourceAssembler;
 import pe.upc.connexbackend.profiles.interfaces.rest.transform.ProfileResourceFromEntityAssembler;
 
@@ -44,23 +45,22 @@ public class ProfileController {
         return new ResponseEntity<>(profileResource, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Profile> updateProfile(@PathVariable Integer id, @RequestBody UpdateProfileCommand command) {
+    @PutMapping("/{userId}")
+    public ResponseEntity<Profile> updateProfile(@PathVariable Integer userId, @RequestBody UpdateProfileResource resource) {
         Optional<Profile> profile = profileCommandService.handle(new UpdateProfileCommand(
-                id,
-                command.userId(),
-                command.bio(),
-                command.brandName(),
-                command.profilePictureUrl(),
-                command.city(),
-                command.country()));
+                userId,
+                resource.bio(),
+                resource.brandName(),
+                resource.profilePictureUrl(),
+                resource.city(),
+                resource.country()));
         if (profile.isEmpty()) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(profile.get());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProfile(@PathVariable Integer id) {
-        profileCommandService.handle(new DeleteProfileCommand(id));
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteProfile(@PathVariable Integer userId) {
+        profileCommandService.handle(new DeleteProfileCommand(userId));
         return ResponseEntity.noContent().build();
     }
 
@@ -70,9 +70,9 @@ public class ProfileController {
         return ResponseEntity.ok(profiles);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Profile> getProfileById(@PathVariable Integer id) {
-        Optional<Profile> profile = profileQueryService.handle(new GetProfileByIdQuery(id));
+    @GetMapping("/{userId}")
+    public ResponseEntity<Profile> getProfileById(@PathVariable Integer userId) {
+        Optional<Profile> profile = profileQueryService.handle(new GetProfileByIdQuery(userId));
         return profile.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 

@@ -3,7 +3,6 @@ package pe.upc.connexbackend.profiles.domain.model.commands;
 import io.swagger.models.auth.In;
 
 public record UpdateProfileCommand(
-        Integer profileId,
         Integer userId,
         String bio,
         String brandName,
@@ -12,9 +11,6 @@ public record UpdateProfileCommand(
         String country
 ) {
     public UpdateProfileCommand {
-        if (profileId == null) {
-            throw new IllegalArgumentException("Profile ID is required");
-        }
         if (userId == null) {
             throw new IllegalArgumentException("User ID is required");
         }

@@ -1,11 +1,11 @@
 package pe.upc.connexbackend.profiles.domain.model.commands;
 
 public record DeleteProfileCommand(
-        Integer profileId
+        Integer userId
 ) {
     public DeleteProfileCommand {
-        if (profileId == null) {
-            throw new IllegalArgumentException("Profile ID is required");
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID is required");
         }
     }
 }
