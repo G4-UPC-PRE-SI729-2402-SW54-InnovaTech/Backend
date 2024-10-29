@@ -1,12 +1,14 @@
 package pe.upc.connexbackend.users.domain.model.commands;
 
+// Define un comando inmutable para actualizar una entidad de Influencer
 public record UpdateInfluencerCommand(
-        Integer influencerId,
-        String firstName,
-        String lastName,
-        String phoneNumber,
-        String socialMediaHandle
+        Integer influencerId,          // ID del influencer a actualizar
+        String firstName,              // Nombre del influencer
+        String lastName,               // Apellido del influencer
+        String phoneNumber,            // Número de teléfono del influencer
+        String socialMediaHandle       // Manejador de redes sociales del influencer
 ) {
+    // Constructor validado que lanza excepciones si los campos obligatorios están vacíos o nulos
     public UpdateInfluencerCommand {
         if (influencerId == null) {
             throw new IllegalArgumentException("Influencer ID is required");
