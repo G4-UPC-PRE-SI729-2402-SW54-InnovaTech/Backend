@@ -1,5 +1,6 @@
 package pe.upc.connexbackend.users.domain.model.commands;
 
+// Define un comando inmutable para crear una entidad de Company
 public record CreateCompanyCommand (
         String name,
         String industry,
@@ -7,7 +8,8 @@ public record CreateCompanyCommand (
         String website,
         String email,
         String passwordHash
-){
+) {
+    // Constructor validado que lanza excepciones si los campos obligatorios están vacíos o nulos
     public CreateCompanyCommand {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name is required");
