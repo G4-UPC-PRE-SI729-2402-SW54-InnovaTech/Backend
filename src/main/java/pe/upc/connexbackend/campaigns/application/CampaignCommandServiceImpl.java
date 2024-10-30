@@ -3,9 +3,12 @@ package pe.upc.connexbackend.campaigns.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pe.upc.connexbackend.campaigns.domain.model.aggregates.Campaign;
+import pe.upc.connexbackend.campaigns.domain.model.commands.AddRegistrationToCampaignCommand;
 import pe.upc.connexbackend.campaigns.domain.model.commands.CreateCampaignCommand;
 import pe.upc.connexbackend.campaigns.domain.model.commands.DeleteCampaignCommand;
 import pe.upc.connexbackend.campaigns.domain.model.commands.UpdateCampaignCommand;
+import pe.upc.connexbackend.campaigns.domain.model.entities.CampaignRegistration;
+import pe.upc.connexbackend.campaigns.domain.model.valueobjects.RegistrationStatus;
 import pe.upc.connexbackend.campaigns.domain.services.CampaignCommandService;
 import pe.upc.connexbackend.campaigns.infraestructure.persistance.jpa.repositories.CampaignRepository;
 
@@ -43,12 +46,31 @@ public class CampaignCommandServiceImpl implements CampaignCommandService {
         campaign.setCreatorId(command.creatorId());
         campaign.setStartDate(command.startDate());
         campaign.setEndDate(command.endDate());
-        return Optional.of(campaignRepository.save(campaign));    }
-
+        return Optional.of(campaignRepository.save(campaign));
+    }
 
     @Override
     @Transactional
     public void handle(DeleteCampaignCommand command) {
         campaignRepository.deleteById(command.campaignId());
     }
+
+    @Override
+    @Transactional
+    public Optional<Campaign> handle(AddRegistrationToCampaignCommand command) {
+        Optional<Campaign> campaignOpt = campaignRepository.findById(command.campaignId());
+        if (campaignOpt.isEmpty()) {
+            return Optional.empty();
+        }
+        Campaign campaign = campaignOpt.get();
+        CampaignRegistration registration = new CampaignRegistration();
+        registration.setCampaign(campaign);
+        registration.setUserId(command.userId());
+        registration.setStatus(RegistrationStatus.PENDING);
+
+        campaign.getRegistrations().add(registration);
+        campaignRepository.save(campaign);
+        return Optional.of(campaign);
+    }
+
 }

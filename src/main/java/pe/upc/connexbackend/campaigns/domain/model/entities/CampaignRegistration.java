@@ -1,6 +1,8 @@
 package pe.upc.connexbackend.campaigns.domain.model.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import pe.upc.connexbackend.campaigns.domain.model.aggregates.Campaign;
 import pe.upc.connexbackend.campaigns.domain.model.valueobjects.RegistrationStatus;
 import pe.upc.connexbackend.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
@@ -8,6 +10,8 @@ import pe.upc.connexbackend.shared.domain.model.aggregates.AuditableAbstractAggr
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 public class CampaignRegistration extends AuditableAbstractAggregateRoot<CampaignRegistration> {
     // Attributes
     @ManyToOne

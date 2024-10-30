@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.upc.connexbackend.campaigns.domain.model.aggregates.Campaign;
+import pe.upc.connexbackend.campaigns.domain.model.commands.AddRegistrationToCampaignCommand;
 import pe.upc.connexbackend.campaigns.domain.model.commands.DeleteCampaignCommand;
 import pe.upc.connexbackend.campaigns.domain.model.commands.UpdateCampaignCommand;
 import pe.upc.connexbackend.campaigns.domain.model.queries.GetAllCampaignsQuery;
@@ -56,6 +57,14 @@ public class CampaignController {
         if (campaign.isEmpty()) return ResponseEntity.notFound().build();
         var campaignResource = CampaignResourceFromEntityAssembler.toResourceFromEntity(campaign.get());
         return ResponseEntity.ok(campaignResource);
+    }
+
+    @PostMapping("/{campaignId}/registrations")
+    public ResponseEntity<Void> addRegistrationToCampaign(@PathVariable Integer campaignId, @RequestParam Integer userId) {
+        var command = new AddRegistrationToCampaignCommand(campaignId, userId);
+        var campaign = campaignCommandService.handle(command);
+        if (campaign.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
