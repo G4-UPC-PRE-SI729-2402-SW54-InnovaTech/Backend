@@ -1,6 +1,8 @@
 package pe.upc.connexbackend.campaigns.domain.model.aggregates;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import pe.upc.connexbackend.campaigns.domain.model.entities.CampaignRegistration;
 import pe.upc.connexbackend.campaigns.domain.model.valueobjects.Status;
 import pe.upc.connexbackend.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 public class Campaign extends AuditableAbstractAggregateRoot<Campaign> {
 
     @Column(nullable = false, length = 100)
@@ -27,12 +31,6 @@ public class Campaign extends AuditableAbstractAggregateRoot<Campaign> {
 
     private LocalDate startDate;
     private LocalDate endDate;
-
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CampaignRegistration> registrations;

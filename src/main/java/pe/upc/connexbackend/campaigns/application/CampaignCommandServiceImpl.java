@@ -1,0 +1,54 @@
+package pe.upc.connexbackend.campaigns.application;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pe.upc.connexbackend.campaigns.domain.model.aggregates.Campaign;
+import pe.upc.connexbackend.campaigns.domain.model.commands.CreateCampaignCommand;
+import pe.upc.connexbackend.campaigns.domain.model.commands.DeleteCampaignCommand;
+import pe.upc.connexbackend.campaigns.domain.model.commands.UpdateCampaignCommand;
+import pe.upc.connexbackend.campaigns.domain.services.CampaignCommandService;
+import pe.upc.connexbackend.campaigns.infraestructure.persistance.jpa.repositories.CampaignRepository;
+
+import java.util.Optional;
+
+@Service
+public class CampaignCommandServiceImpl implements CampaignCommandService {
+    private final CampaignRepository campaignRepository;
+
+    public CampaignCommandServiceImpl(CampaignRepository campaignRepository) {
+        this.campaignRepository = campaignRepository;
+    }
+
+    @Override
+    @Transactional
+    public Optional<Campaign> handle(CreateCampaignCommand command) {
+        var campaign = new Campaign();
+        campaign.setTitle(command.title());
+        campaign.setDescription(command.description());
+        campaign.setStatus(command.status());
+        campaign.setCreatorId(command.creatorId());
+        campaign.setStartDate(command.startDate());
+        campaign.setEndDate(command.endDate());
+        return Optional.of(campaignRepository.save(campaign));
+    }
+
+    @Override
+    @Transactional
+    public Optional<Campaign> handle(UpdateCampaignCommand command) {
+        var campaign = campaignRepository.findById(command.campaignId())
+                .orElseThrow(() -> new RuntimeException("Campaign not found"));
+        campaign.setTitle(command.title());
+        campaign.setDescription(command.description());
+        campaign.setStatus(command.status());
+        campaign.setCreatorId(command.creatorId());
+        campaign.setStartDate(command.startDate());
+        campaign.setEndDate(command.endDate());
+        return Optional.of(campaignRepository.save(campaign));    }
+
+
+    @Override
+    @Transactional
+    public void handle(DeleteCampaignCommand command) {
+        campaignRepository.deleteById(command.campaignId());
+    }
+}
