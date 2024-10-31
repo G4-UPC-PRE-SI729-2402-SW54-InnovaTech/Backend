@@ -11,25 +11,32 @@ import pe.upc.connexbackend.campaigns.domain.model.entities.CampaignRegistration
 import pe.upc.connexbackend.campaigns.domain.model.valueobjects.RegistrationStatus;
 import pe.upc.connexbackend.campaigns.domain.services.CampaignCommandService;
 import pe.upc.connexbackend.campaigns.infraestructure.persistance.jpa.repositories.CampaignRepository;
+import pe.upc.connexbackend.users.domain.model.aggregates.User;
+import pe.upc.connexbackend.users.infraestructure.persistance.jpa.repositories.UserRepository;
 
 import java.util.Optional;
 
 @Service
 public class CampaignCommandServiceImpl implements CampaignCommandService {
     private final CampaignRepository campaignRepository;
+    private final UserRepository userRepository;
 
-    public CampaignCommandServiceImpl(CampaignRepository campaignRepository) {
+    public CampaignCommandServiceImpl(CampaignRepository campaignRepository, UserRepository userRepository) {
         this.campaignRepository = campaignRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     @Transactional
     public Optional<Campaign> handle(CreateCampaignCommand command) {
+        User creator = userRepository.findById(command.creatorId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         var campaign = new Campaign();
         campaign.setTitle(command.title());
         campaign.setDescription(command.description());
         campaign.setStatus(command.status());
-        campaign.setCreatorId(command.creatorId());
+        campaign.setCreator(creator);
         campaign.setStartDate(command.startDate());
         campaign.setEndDate(command.endDate());
         return Optional.of(campaignRepository.save(campaign));
@@ -40,10 +47,14 @@ public class CampaignCommandServiceImpl implements CampaignCommandService {
     public Optional<Campaign> handle(UpdateCampaignCommand command) {
         var campaign = campaignRepository.findById(command.campaignId())
                 .orElseThrow(() -> new RuntimeException("Campaign not found"));
+
+        User creator = userRepository.findById(command.creatorId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         campaign.setTitle(command.title());
         campaign.setDescription(command.description());
         campaign.setStatus(command.status());
-        campaign.setCreatorId(command.creatorId());
+        campaign.setCreator(creator);
         campaign.setStartDate(command.startDate());
         campaign.setEndDate(command.endDate());
         return Optional.of(campaignRepository.save(campaign));
@@ -63,9 +74,12 @@ public class CampaignCommandServiceImpl implements CampaignCommandService {
             return Optional.empty();
         }
         Campaign campaign = campaignOpt.get();
+        User user = userRepository.findById(command.userId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         CampaignRegistration registration = new CampaignRegistration();
         registration.setCampaign(campaign);
-        registration.setUserId(command.userId());
+        registration.setUser(user);
         registration.setStatus(RegistrationStatus.PENDING);
 
         campaign.getRegistrations().add(registration);

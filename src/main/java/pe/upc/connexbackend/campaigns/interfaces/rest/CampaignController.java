@@ -60,7 +60,7 @@ public class CampaignController {
     }
 
     @PostMapping("/{campaignId}/registrations")
-    public ResponseEntity<Void> addRegistrationToCampaign(@PathVariable Integer campaignId, @RequestParam Integer userId) {
+    public ResponseEntity<Campaign> addRegistrationToCampaign(@PathVariable Integer campaignId, @RequestParam Integer userId) {
         var command = new AddRegistrationToCampaignCommand(campaignId, userId);
         var campaign = campaignCommandService.handle(command);
         if (campaign.isEmpty()) return ResponseEntity.notFound().build();

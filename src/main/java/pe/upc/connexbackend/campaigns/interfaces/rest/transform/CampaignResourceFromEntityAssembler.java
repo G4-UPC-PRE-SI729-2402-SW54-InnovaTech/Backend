@@ -10,7 +10,7 @@ public class CampaignResourceFromEntityAssembler {
                 entity.getId(),
                 entity.getTitle(),
                 entity.getDescription(),
-                entity.getCreatorId(),
+                entity.getCreator().getId(),
                 entity.getStatus(),
                 entity.getStartDate(),
                 entity.getEndDate()

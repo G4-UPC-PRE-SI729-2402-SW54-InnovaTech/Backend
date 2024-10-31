@@ -6,8 +6,8 @@ import lombok.Setter;
 import pe.upc.connexbackend.campaigns.domain.model.aggregates.Campaign;
 import pe.upc.connexbackend.campaigns.domain.model.valueobjects.RegistrationStatus;
 import pe.upc.connexbackend.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
+import pe.upc.connexbackend.users.domain.model.aggregates.User;
 
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -18,15 +18,14 @@ public class CampaignRegistration extends AuditableAbstractAggregateRoot<Campaig
     @JoinColumn(name = "campaign_id", nullable = false)
     private Campaign campaign;
 
-    @Column(nullable = false)
-    private Integer userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
 
     @Column(nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     private RegistrationStatus status = RegistrationStatus.PENDING;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime registrationDate = LocalDateTime.now();
 
     // Getters and setters
     public CampaignRegistration() {
