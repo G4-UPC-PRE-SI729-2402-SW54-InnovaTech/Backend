@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import pe.upc.connexbackend.campaigns.domain.model.aggregates.Campaign;
 import pe.upc.connexbackend.campaigns.domain.model.commands.AddRegistrationToCampaignCommand;
 import pe.upc.connexbackend.campaigns.domain.model.commands.DeleteCampaignCommand;
+import pe.upc.connexbackend.campaigns.domain.model.commands.RemoveRegistrationInCampaignCommand;
 import pe.upc.connexbackend.campaigns.domain.model.commands.UpdateCampaignCommand;
+import pe.upc.connexbackend.campaigns.domain.model.entities.CampaignRegistration;
 import pe.upc.connexbackend.campaigns.domain.model.queries.GetAllCampaignsQuery;
 import pe.upc.connexbackend.campaigns.domain.model.queries.GetCampaignsByDateRangeQuery;
+import pe.upc.connexbackend.campaigns.domain.model.queries.GetRegistrationsByCampaignIdQuery;
 import pe.upc.connexbackend.campaigns.domain.services.CampaignCommandService;
 import pe.upc.connexbackend.campaigns.domain.services.CampaignQueryService;
 import pe.upc.connexbackend.campaigns.interfaces.rest.resources.CampaignResource;
@@ -67,6 +70,13 @@ public class CampaignController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @DeleteMapping("/{campaignId}/registrations/{userId}")
+    public ResponseEntity<Void> removeRegistrationFromCampaign(@PathVariable Integer campaignId, @PathVariable Integer userId) {
+        var command = new RemoveRegistrationInCampaignCommand(campaignId, userId);
+        campaignCommandService.handle(command);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping
     public ResponseEntity<List<Campaign>> getAllCampaigns(){
         List<Campaign> campaigns = campaignQueryService.handle(new GetAllCampaignsQuery());
@@ -76,6 +86,12 @@ public class CampaignController {
     public ResponseEntity<List<Campaign>> getCampaignsByDateRange(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
         List<Campaign> campaigns = campaignQueryService.handle(new GetCampaignsByDateRangeQuery(startDate, endDate));
         return ResponseEntity.ok(campaigns);
+    }
+
+    @GetMapping("/{campaignId}/registrations")
+    public ResponseEntity<List<CampaignRegistration>> getRegistrationsByCampaignId(@PathVariable Integer campaignId) {
+        List<CampaignRegistration> registrations = campaignQueryService.handle(new GetRegistrationsByCampaignIdQuery(campaignId));
+        return ResponseEntity.ok(registrations);
     }
 
 
