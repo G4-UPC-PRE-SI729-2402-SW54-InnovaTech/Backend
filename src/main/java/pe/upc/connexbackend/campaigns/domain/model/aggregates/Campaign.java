@@ -1,5 +1,6 @@
 package pe.upc.connexbackend.campaigns.domain.model.aggregates;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,13 +10,13 @@ import pe.upc.connexbackend.shared.domain.model.aggregates.AuditableAbstractAggr
 import pe.upc.connexbackend.users.domain.model.aggregates.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
 public class Campaign extends AuditableAbstractAggregateRoot<Campaign> {
-
     @Column(nullable = false, length = 100)
     private String title;
 
@@ -34,10 +35,9 @@ public class Campaign extends AuditableAbstractAggregateRoot<Campaign> {
     private LocalDate endDate;
 
     @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CampaignRegistration> registrations;
+    @JsonManagedReference
+    private List<CampaignRegistration> registrations = new ArrayList<>();
 
     public Campaign() {
     }
-
-    // Getters and setters
 }
