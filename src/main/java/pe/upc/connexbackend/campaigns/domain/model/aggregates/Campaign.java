@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import pe.upc.connexbackend.campaigns.domain.model.entities.CampaignRegistration;
 import pe.upc.connexbackend.campaigns.domain.model.valueobjects.Status;
+import pe.upc.connexbackend.campaigns.domain.model.valueobjects.UserRegistered;
 import pe.upc.connexbackend.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import pe.upc.connexbackend.users.domain.model.aggregates.User;
 
@@ -23,9 +24,8 @@ public class Campaign extends AuditableAbstractAggregateRoot<Campaign> {
     @Column(length = 255)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
-    private User creator;
+    @Embedded
+    private UserRegistered creator;
 
     @Column(nullable = false, length = 50)
     @Enumerated(EnumType.STRING)

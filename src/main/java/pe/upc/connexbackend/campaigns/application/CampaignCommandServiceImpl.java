@@ -35,14 +35,14 @@ public class CampaignCommandServiceImpl implements CampaignCommandService {
     @Override
     @Transactional
     public Optional<Campaign> handle(CreateCampaignCommand command) {
-        User creator = userRepository.findById(command.creatorId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Profile profile = profileRepository.findByUserId(command.creatorId())
+                .orElseThrow(() -> new RuntimeException("Profile not found"));
 
         var campaign = new Campaign();
         campaign.setTitle(command.title());
         campaign.setDescription(command.description());
         campaign.setStatus(command.status());
-        campaign.setCreator(creator);
+        campaign.setCreator(new UserRegistered(profile.getUser().getId(),profile.getBrandName(),profile.getUser().getEmailAddress(),profile.getUser().getUserTypeEnum()));
         campaign.setStartDate(command.startDate());
         campaign.setEndDate(command.endDate());
         return Optional.of(campaignRepository.save(campaign));
@@ -54,13 +54,10 @@ public class CampaignCommandServiceImpl implements CampaignCommandService {
         var campaign = campaignRepository.findById(command.campaignId())
                 .orElseThrow(() -> new RuntimeException("Campaign not found"));
 
-        User creator = userRepository.findById(command.creatorId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
         campaign.setTitle(command.title());
         campaign.setDescription(command.description());
         campaign.setStatus(command.status());
-        campaign.setCreator(creator);
+        campaign.setCreator(campaign.getCreator());
         campaign.setStartDate(command.startDate());
         campaign.setEndDate(command.endDate());
         return Optional.of(campaignRepository.save(campaign));
@@ -75,13 +72,18 @@ public class CampaignCommandServiceImpl implements CampaignCommandService {
     @Override
     @Transactional
     public Optional<Campaign> handle(AddRegistrationToCampaignCommand command) {
-        Optional<Campaign> campaignOpt = campaignRepository.findById(command.campaignId());
-        if (campaignOpt.isEmpty()) {
-            return Optional.empty();
-        }
-        Campaign campaign = campaignOpt.get();
+        Campaign campaign = campaignRepository.findById(command.campaignId())
+                .orElseThrow(() -> new RuntimeException("Campaign not found"));
+
         Profile profile = profileRepository.findByUserId(command.userId())
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
+
+        if(campaign.getCreator().getUserId()==command.userId()){
+            throw new RuntimeException("The creator of the campaign cannot register");
+        }
+        if(campaign.getRegistrations().stream().anyMatch(registration -> registration.getUser().getUserId()==command.userId())){
+            throw new RuntimeException("The user is already registered");
+        }
 
         CampaignRegistration registration = new CampaignRegistration();
         registration.setCampaign(campaign);
