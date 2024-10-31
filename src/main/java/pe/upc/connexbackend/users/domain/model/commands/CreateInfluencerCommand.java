@@ -1,6 +1,6 @@
 package pe.upc.connexbackend.users.domain.model.commands;
 
-
+// Define un comando inmutable para crear una entidad de Influencer
 public record CreateInfluencerCommand(
         String firstName,
         String lastName,
@@ -9,6 +9,7 @@ public record CreateInfluencerCommand(
         String email,
         String passwordHash
 ) {
+    // Constructor validado que lanza excepciones si los campos obligatorios están vacíos o nulos
     public CreateInfluencerCommand {
         if (firstName == null || firstName.isBlank()) {
             throw new IllegalArgumentException("First name is required");

@@ -15,11 +15,18 @@ import pe.upc.connexbackend.users.infraestructure.persistance.jpa.repositories.U
 
 import java.util.Optional;
 
+/**
+ * Servicio para manejar los comandos relacionados con las compañías.
+ * Implementa la interfaz CompanyCommandService y proporciona la lógica 
+ * para crear, actualizar y eliminar compañías en la base de datos.
+ */
 @Service
 public class CompanyCommandServiceImpl implements CompanyCommandService {
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
-
+     /**
+     * Constructor que inyecta las dependencias del repositorio de compañías y usuarios.
+     */
     public CompanyCommandServiceImpl(CompanyRepository companyRepository, UserRepository userRepository) {
         this.companyRepository = companyRepository;
         this.userRepository = userRepository;

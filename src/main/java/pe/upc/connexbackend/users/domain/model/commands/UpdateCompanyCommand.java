@@ -1,5 +1,6 @@
 package pe.upc.connexbackend.users.domain.model.commands;
 
+// Define un comando inmutable para actualizar una entidad de Company
 public record UpdateCompanyCommand(
         Integer companyId,
         String name,
@@ -7,6 +8,7 @@ public record UpdateCompanyCommand(
         String phoneNumber,
         String website
 ) {
+    // Constructor validado que lanza excepciones si los campos obligatorios están vacíos o nulos
     public UpdateCompanyCommand {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name is required");
@@ -22,3 +24,4 @@ public record UpdateCompanyCommand(
         }
     }
 }
+
