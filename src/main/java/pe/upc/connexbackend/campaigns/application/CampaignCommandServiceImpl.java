@@ -72,6 +72,8 @@ public class CampaignCommandServiceImpl implements CampaignCommandService {
     @Override
     @Transactional
     public Optional<Campaign> handle(AddRegistrationToCampaignCommand command) {
+        // Busca la campaña en el repositorio usando el ID de campaña provisto en el comando.
+        // Si no se encuentra la campaña, lanza una excepción.
         Campaign campaign = campaignRepository.findById(command.campaignId())
                 .orElseThrow(() -> new RuntimeException("Campaign not found"));
 
