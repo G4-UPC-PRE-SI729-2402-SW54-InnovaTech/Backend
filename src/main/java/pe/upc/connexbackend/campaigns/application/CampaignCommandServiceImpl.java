@@ -84,6 +84,8 @@ public class CampaignCommandServiceImpl implements CampaignCommandService {
         if(campaign.getCreator().getUserId()==command.userId()){
             throw new RuntimeException("The creator of the campaign cannot register");
         }
+         // Verifica si el usuario ya está registrado en la campaña.
+         // Si ya existe una inscripción del usuario, lanza una excepción para evitar registros duplicados.
         if(campaign.getRegistrations().stream().anyMatch(registration -> registration.getUser().getUserId()==command.userId())){
             throw new RuntimeException("The user is already registered");
         }
