@@ -79,7 +79,8 @@ public class CampaignCommandServiceImpl implements CampaignCommandService {
 
         Profile profile = profileRepository.findByUserId(command.userId())
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
-
+        // Verifica si el usuario que intenta registrarse es el creador de la campaña.
+       // Si lo es, lanza una excepción, ya que el creador no puede registrarse en su propia campaña.
         if(campaign.getCreator().getUserId()==command.userId()){
             throw new RuntimeException("The creator of the campaign cannot register");
         }
